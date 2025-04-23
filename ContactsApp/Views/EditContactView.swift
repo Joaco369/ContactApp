@@ -32,11 +32,12 @@ struct EditContactView: View {
             deleteContact()
           }){
             Text("Delete Contact")
+              .frame(maxWidth: .infinity, maxHeight: 50)
               .foregroundStyle(.white)
               .background(Color.red)
-              
+              .clipShape(.rect(cornerRadius: 10))
+              .padding(.horizontal)
           }
-          .padding(.bottom)
         }
         .toolbar {
           ToolbarItem(placement: .topBarLeading) {
@@ -61,6 +62,7 @@ struct EditContactView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
       }
+  
   private func updateContact() {
     viewModel.updateContact(contact)
     dismiss()

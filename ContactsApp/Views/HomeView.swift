@@ -9,21 +9,25 @@ import SwiftUI
 
 struct HomeView: View {
   
-  @State private var searchText = ""
   @Environment(ContactsViewModel.self) var viewModel
-  
   @State private var isShowSheet: Bool = false
+  @State private var searchText = ""
+  
+  var searchResults: [Model] {
+    viewModel.filterContact(for: searchText)
+  }
   
   var body: some View {
     NavigationStack {
       VStack {
         List {
-          ForEach(viewModel.models) { model in
+          ForEach(searchResults) { model in
             NavigationLink(value: model) {
               ContactRowView(model: model)
             }
           }
         }
+        .searchable(text: $searchText)
         .sheet(isPresented: $isShowSheet) {
           NewContactView()
             .presentationDetents([.height(300)])
@@ -43,7 +47,6 @@ struct HomeView: View {
           }
         }
       }
-      .searchable(text: $searchText, prompt: "Search")
       .navigationTitle("Contacts")
     }
     .tint(.black)

@@ -16,6 +16,18 @@ class ContactsViewModel {
     fetchContact()
   }
   
+  func filterContact(for text: String) -> [Model] {
+    if text.isEmpty {
+      return models
+    } else {
+      return models.filter {
+        $0.firstName.localizedCaseInsensitiveContains(text) ||
+        $0.lastName.localizedCaseInsensitiveContains(text) ||
+        $0.email.localizedCaseInsensitiveContains(text)
+      }
+    }
+  }
+  
   func fetchContact() {
     models = [
     .init(id: "1", firstName: "Joaquín", lastName: "Villarreal", email: "joaquin@joaquinvillarreal.com"),
