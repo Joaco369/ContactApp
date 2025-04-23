@@ -9,9 +9,10 @@ import SwiftUI
 
 struct EditContactView: View {
   
-  @State private var contact: Model
-  
+  @Environment(ContactsViewModel.self) var viewModel
   @Environment(\.dismiss) var dismiss
+  
+  @State private var contact: Model
   
   init(contact: Model) {
     _contact = State(initialValue: contact)
@@ -20,15 +21,15 @@ struct EditContactView: View {
     var body: some View {
         VStack {
           Form {
-            TextField(contact.name, text: $contact.name)
-            TextField(contact.lastName, text: $contact.lastName)
-            TextField(contact.email, text: $contact.email)
+            TextField("First Name", text: $contact.firstName)
+            TextField("Last Name", text: $contact.lastName)
+            TextField("Email", text: $contact.email)
               .keyboardType(.emailAddress)
               .textInputAutocapitalization(.never)
               .textContentType(.emailAddress)
           }
           Button(action: {
-            
+            deleteContact()
           }){
             Text("Delete Contact")
               .foregroundStyle(.white)
@@ -36,7 +37,6 @@ struct EditContactView: View {
               
           }
           .padding(.bottom)
-          .frame(width: .infinity)
         }
         .toolbar {
           ToolbarItem(placement: .topBarLeading) {
@@ -49,7 +49,7 @@ struct EditContactView: View {
           }
           ToolbarItem(placement: .topBarTrailing) {
             Button(action: {
-              dismiss()
+              updateContact()
             }){
               Text("Save")
                 .tint(.black)
@@ -61,9 +61,17 @@ struct EditContactView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
       }
-    
+  private func updateContact() {
+    viewModel.updateContact(contact)
+    dismiss()
+  }
+  private func deleteContact() {
+    viewModel.deleteContact(contact)
+    dismiss()
+  }
 }
 
 #Preview {
-  EditContactView(contact: .init(id: "1", name: "Joaquin", lastName: "Villarreal", email: "joako.2villarreal@gmail.com"))
+  EditContactView(contact: .init(id: "1", firstName: "Joaquin", lastName: "Villarreal", email: "joako.2villarreal@gmail.com"))
+    .environment(ContactsViewModel())
 }

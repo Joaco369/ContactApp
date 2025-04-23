@@ -9,7 +9,14 @@ import SwiftUI
 
 struct Model: Identifiable, Hashable {
   let id: String
-  var name: String
+  var firstName: String
   var lastName: String
   var email: String
+  
+  var initials: String? {
+    let first = firstName.prefix(1)
+    let last = lastName.prefix(1)
+    
+    return String(first + last)
+  }
 }

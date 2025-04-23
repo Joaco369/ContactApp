@@ -13,13 +13,13 @@ struct ContactRowView: View {
   
     var body: some View {
       HStack {
-        Text(model.id)
+        Text(model.initials ?? "")
           .foregroundStyle(.white)
           .frame(width: 48, height: 48)
           .background(Color(.systemGray3))
           .clipShape(.circle)
         VStack(alignment: .leading) {
-          Text("\(model.name) \(model.lastName)")
+          Text("\(model.firstName) \(model.lastName)")
             .fontWeight(.bold)
           Text(model.email)
             .foregroundStyle(.gray)
@@ -29,5 +29,5 @@ struct ContactRowView: View {
 }
 
 #Preview {
-  ContactRowView(model: .init(id: "1", name: "Joaquin", lastName: "Villarreal", email: "joaquin@joaquin.com"))
+  ContactRowView(model: .init(id: "1", firstName: "Joaquin", lastName: "Villarreal", email: "joaquin@joaquin.com"))
 }

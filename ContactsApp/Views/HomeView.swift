@@ -10,11 +10,7 @@ import SwiftUI
 struct HomeView: View {
   
   @State private var searchText = ""
-  @State private var model: [Model] = [
-    .init(id: "1", name: "Joaquín", lastName: "Villarreal", email: "joaquin@joaquinvillarreal.com"),
-    .init(id: "2", name: "Joaquín", lastName: "Pérez", email: "joaquin@joaquinvillarreal.com"),
-    .init(id: "3", name: "Joaquín", lastName: "Affonso", email: "joaquin@joaquinvillarreal.com")
-  ]
+  @Environment(ContactsViewModel.self) var viewModel
   
   @State private var isShowSheet: Bool = false
   
@@ -22,7 +18,7 @@ struct HomeView: View {
     NavigationStack {
       VStack {
         List {
-          ForEach(model) { model in
+          ForEach(viewModel.models) { model in
             NavigationLink(value: model) {
               ContactRowView(model: model)
             }
