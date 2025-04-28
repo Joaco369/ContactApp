@@ -13,11 +13,16 @@ struct EditContactView: View {
   @Environment(\.dismiss) var dismiss
   
   @State private var contact: Model
+  @State private var contactDidChange = false
+  @State private var showExitConfirmation = false
+  @State private var showDeleteConfirmation = false
+  private let originalContact: Model
   
   init(contact: Model) {
     _contact = State(initialValue: contact)
+    originalContact = contact
   }
-
+  
     var body: some View {
         VStack {
           Form {
@@ -29,7 +34,7 @@ struct EditContactView: View {
               .textContentType(.emailAddress)
           }
           Button(action: {
-            deleteContact()
+            showDeleteConfirmation = true
           }){
             Text("Delete Contact")
               .frame(maxWidth: .infinity, maxHeight: 50)
@@ -42,7 +47,7 @@ struct EditContactView: View {
         .toolbar {
           ToolbarItem(placement: .topBarLeading) {
             Button(action: {
-              dismiss()
+              onCancel()
             }){
               Text("Cancel")
                 .tint(.black)
@@ -53,11 +58,22 @@ struct EditContactView: View {
               updateContact()
             }){
               Text("Save")
+                .disabled(!contactDidChange)
+                .opacity(contactDidChange ? 1 : 0.5)
                 .tint(.black)
                 .font(.headline)
             }
           }
         }
+        .alert(isPresented: $showExitConfirmation) {
+          alertExitConfirmation
+        }
+        .alert(isPresented: $showDeleteConfirmation) {
+          alertDeleteConfirmation
+        }
+        .onChange(of: contact, { oldValue, newValue in
+          contactDidChange = newValue != originalContact
+        })
         .navigationTitle("Edit Contact")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
@@ -70,6 +86,23 @@ struct EditContactView: View {
   private func deleteContact() {
     viewModel.deleteContact(contact)
     dismiss()
+  }
+  private func onCancel() {
+    if contactDidChange {
+      showExitConfirmation = true
+    } else {
+      dismiss()
+    }
+  }
+  private var alertExitConfirmation: Alert {
+    Alert(title: Text("Unsaved Changes"), message: Text("You have unsaved changes. Do you want to save them before leaving?"), primaryButton: .destructive(Text("Discard Changes"), action: {
+      dismiss()
+    }), secondaryButton: .default(Text("Stay")))
+  }
+  private var alertDeleteConfirmation: Alert {
+    Alert(title: Text("Delete Contact"), message: Text("You have delete contact. Do you want to delete them before leaving?"), primaryButton: .default(Text("Cancel")), secondaryButton: .destructive(Text("Delete"), action: {
+      deleteContact()
+    }))
   }
 }
 
