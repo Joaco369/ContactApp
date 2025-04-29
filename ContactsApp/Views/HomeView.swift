@@ -23,7 +23,11 @@ struct HomeView: View {
         List {
           ForEach(searchResults) { model in
             NavigationLink(value: model) {
-              ContactRowView(model: model)
+              ContactRowView(model: model) {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                  viewModel.deleteContact(model)
+                }
+              }
             }
           }
         }

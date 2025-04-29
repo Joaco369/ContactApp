@@ -10,6 +10,7 @@ import SwiftUI
 struct ContactRowView: View {
   
   let model: Model
+  var action: (() -> Void)?
   
     var body: some View {
       HStack {
@@ -23,6 +24,15 @@ struct ContactRowView: View {
             .fontWeight(.bold)
           Text(model.email)
             .foregroundStyle(.gray)
+        }
+      }
+      .swipeActions(edge: .trailing) {
+        Button {
+          // Action
+          action?()
+        } label: {
+          Image(systemName: "trash")
+            .tint(.red)
         }
       }
     }
